@@ -24,12 +24,17 @@
   "Org-mode LaTeX classes and templates for KAODocument (KAOReport/KAOBook)."
   :group 'org)
 
+(defconst kaodocument-emacs--repo-dir
+  (if (featurep 'straight)
+      (straight--repos-dir "kaodocument-emacs")
+    (file-name-directory (or load-file-name buffer-file-name))))
+
 (defcustom kaodocument-emacs-template-dir
-  (expand-file-name "templates" (file-name-directory (or load-file-name buffer-file-name)))
+  (expand-file-name "templates" kaodocument-emacs--repo-dir)
   "Directory containing KAODocument LaTeX templates and Org templates.")
 
 (defcustom kaodocument-emacs-macro-file
-  (expand-file-name "macros/kaoreport-macro.org" (file-name-directory (or load-file-name buffer-file-name)))
+  (expand-file-name "macros/kaoreport-macro.org" kaodocument-emacs--repo-dir)
   "Org macro file to insert automatically when exporting.")
 
 ;;;###autoload
@@ -67,12 +72,12 @@
   (add-hook 'org-export-before-processing-hook #'kaodocument-emacs--auto-copy-templates)
   (add-hook 'org-export-before-processing-hook #'kaodocument-emacs--auto-insert-org-template))
 
-(defun kaodocument-emacs--auto-insert-macros (backend)
+(defun kaodocument-emacs--auto-insert-macros (_backend)
   "Automatically insert macro file at the top of Org buffer if exporting with KAODocument."
   (when (derived-mode-p 'org-mode)
     (let* ((latex-class-keywords (org-collect-keywords '("LATEX_CLASS")))
            (latex-class (when latex-class-keywords
-                         (car (cdr (car latex-class-keywords))))))
+                          (car (cdr (car latex-class-keywords))))))
       (when (or (string= latex-class "kaoreport")
                 (string= latex-class "kaobook"))
         (save-excursion
@@ -80,50 +85,47 @@
           (insert-file-contents-literally kaodocument-emacs-macro-file)
           (insert "\n"))))))
 
-(defun kaodocument-emacs--auto-copy-templates (backend)
+(defun kaodocument-emacs--auto-copy-templates (_backend)
   "Copy required .sty/.cls files to the Org file directory if not present."
   (let* ((orgfile (or (buffer-file-name) default-directory))
          (target-dir (file-name-directory orgfile)))
-    ;; Check if template directory exists
     (when (and kaodocument-emacs-template-dir (file-exists-p kaodocument-emacs-template-dir))
-      (let ((files (directory-files kaodocument-emacs-template-dir t "\\.\(sty\|cls\)$")))
+      (let ((files (directory-files kaodocument-emacs-template-dir t "\\.\\(sty\\|cls\\)$")))
         (dolist (f files)
           (let ((dest (expand-file-name (file-name-nondirectory f) target-dir)))
             (unless (file-exists-p dest)
               (copy-file f dest t))))))))
 
-(defun kaodocument-emacs--auto-insert-org-template (backend)
+(defun kaodocument-emacs--auto-insert-org-template (_backend)
   "Automatically insert appropriate Org template based on LaTeX class."
   (when (derived-mode-p 'org-mode)
     (let* ((latex-class-keywords (org-collect-keywords '("LATEX_CLASS")))
            (latex-class (when latex-class-keywords
-                         (car (cdr (car latex-class-keywords))))))
-      ;; Check if template directory exists
+                          (car (cdr (car latex-class-keywords))))))
       (when (and kaodocument-emacs-template-dir (file-exists-p kaodocument-emacs-template-dir))
-        (let ((template-file (cond
-                              ((string= latex-class "kaoreport")
-                               (expand-file-name "kaoreport-template.org" kaodocument-emacs-template-dir))
-                              ((string= latex-class "kaobook")
-                               (expand-file-name "kaobook-template.org" kaodocument-emacs-template-dir))
-                              (t nil))))
+        (let ((template-file
+               (cond
+                ((string= latex-class "kaoreport")
+                 (expand-file-name "kaoreport-template.org" kaodocument-emacs-template-dir))
+                ((string= latex-class "kaobook")
+                 (expand-file-name "kaobook-template.org" kaodocument-emacs-template-dir))
+                (t nil))))
           (when (and template-file (file-exists-p template-file))
             (save-excursion
               (goto-char (point-min))
-              ;; Insert template content without the title/author/date sections
               (let ((template-content (with-temp-buffer
-                                       (insert-file-contents-literally template-file)
-                                       (buffer-string))))
-                ;; Remove title, author, date lines and content sections
+                                        (insert-file-contents-literally template-file)
+                                        (buffer-string))))
                 (let ((lines (split-string template-content "\n" t)))
                   (dolist (line lines)
                     (unless (or (string-match "^#\\+TITLE:" line)
-                               (string-match "^#\\+AUTHOR:" line)
-                               (string-match "^#\\+DATE:" line)
-                               (string-match "^\\* " line) ; Skip content sections
-                               (string-match "^#\\+BEGIN_COMMENT" line) ; Skip commented sections
-                               (string-match "^#\\+END_COMMENT" line)) ; Skip commented sections
+                                (string-match "^#\\+AUTHOR:" line)
+                                (string-match "^#\\+DATE:" line)
+                                (string-match "^\\* " line)
+                                (string-match "^#\\+BEGIN_COMMENT" line)
+                                (string-match "^#\\+END_COMMENT" line))
                       (insert line "\n"))))))))))))
 
 (provide 'kaodocument-emacs)
 ;;; kaodocument-emacs.el ends here
- 
+
