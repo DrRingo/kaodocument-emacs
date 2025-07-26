@@ -1,0 +1,104 @@
+#+LaTeX_CLASS: kaobook
+#+LATEX_CLASS_OPTIONS: [a4paper,12pt]
+
+# ---------------------------
+# Các package đặc trưng của kaobook
+#+LATEX_HEADER: \usepackage{templates/kao}
+#+LATEX_HEADER: \usepackage{templates/kaobiblio}
+#+LATEX_HEADER: \usepackage{templates/kaorefs}
+#+LATEX_HEADER: \usepackage[framed=true]{templates/kaotheorems}
+
+# ---------------------------
+# Tuỳ chỉnh kaobook của tôi
+
+# Không có lùi đầu dòng, bởi vì cột lớn trong kaobook cũng đã nhỏ, lùi nữa không đẹp
+#+LATEX_HEADER: \setlength\parindent{0pt}
+
+# Khoảng cách giữa các đoạn văn rộng hơn một chút, dễ đọc và phân biệt các đoạn hơn 
+#+LATEX_HEADER: \setlength{\parskip}{5pt} 
+
+# ---
+
+# Chuyển tất cả các footnote trong kaobook thành sidenote, có đánh số theo mặc định, các sidenote có tuỳ chỉnh đánh số riêng hoặc offset sẽ có lệnh cụ thể riêng
+# Trong môi trường theorem, khi làm footnote sẽ ghi ngay dưới môi trường, nên cần phải đặt lại lệnh footnote để tận dụng chức năng này, trong khi vẫn sử dụng được footnote như là sidenote
+#+LATEX_HEADER: \let\mathfootnote\footnote
+#+LATEX_HEADER: \renewcommand{\footnote}[1]{\sidenote{#1}}
+
+# ---
+
+# Tùy chỉnh định dạng cite: có dạng Author - Year - Title, chứ không phải dạng AuthorYear như mặc định
+#+LATEX_HEADER: \renewcommand{\formatmargincitation}[1]{\color{Gray!80} \parencite{#1}: \citeauthor*{#1} (\citeyear{#1}), \citetitle{#1}\\}
+# Do orgmode xuất ra dạng autocite, nên muốn có sidecite thì phải định nghĩa lại lệnh này
+#+LATEX_HEADER: \renewcommand{\autocite}[1]{\sidecite{#1}}
+
+# ---
+
+# Phần header và footer tuỳ chình, sử dụng package fancyhdr
+# Các package cần thiết
+#+LATEX_HEADER: \usepackage{fancyhdr} 
+#+LATEX_HEADER: \usepackage{graphicx}
+# Tùy chỉnh fancy
+#+LATEX_HEADER: \pagestyle{fancy}
+#+LATEX_HEADER: \fancyhf{} 
+ 
+# Header mặt ngoài có số trang, RO: right for odds, LE: left for even
+# Header có hình cái lông chim apache
+# +LATEX_HEADER: \fancyhead[RO,LE]{\includegraphics[height=1.5cm]{assets/img/apache_feather.png}} 
+
+# Footer mặt ngoài có logo của tôi, RO, LE tương tự như trên
+# Lệnh \vskip dùng để điều chỉnh bông hoa cho cân với số trang
+#+LATEX_HEADER: \fancyfoot[C]{\vskip-7mm\includegraphics[height=1cm]{assets/ringochrysanthemum.pdf}} 
+#+LATEX_HEADER: \fancyfoot[RO,LE]{\thepage} 
+# Đảm báo ẩn dòng gạch chia ở header và footer
+#+LATEX_HEADER: \renewcommand{\headrulewidth}{0pt} 
+#+LATEX_HEADER: \renewcommand{\footrulewidth}{0pt} 
+
+# ---------------------------
+# Các package thông dụng
+#+LATEX_HEADER: \usepackage[utf8]{vietnam}
+# Orgmode cũng tự động import đúng lệnh này ở trên #+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \usepackage{amsmath,amsthm,amsfonts,latexsym,amssymb,exscale,eucal,eufrak,mathtools,makeidx,algorithm2e}
+#+LATEX_HEADER: \usepackage{booktabs}
+
+#+LATEX_HEADER: \usepackage{cleveref}
+#+LATEX_HEADER: \crefname{figure}{hình}{hình}
+#+LATEX_HEADER: \Crefname{figure}{Hình}{Hình}
+
+#+LATEX_HEADER: \makeindex
+
+# ---------------------------
+# Tuỳ chỉnh xuất pdf latex
+#+OPTIONS:   H:3 num:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:t skip:nil d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:t ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+
+#+BEGIN_COMMENT
+# ---------------------------
+# Cấu trúc tài liệu kaobook
+
+#+TITLE: Tiêu đề sách
+#+AUTHOR: Tên tác giả
+#+DATE: \today
+
+#+begin_export latex
+\frontmatter
+#+end_export
+
+* Lời nói đầu
+* Mục lục
+
+#+begin_export latex
+\mainmatter
+#+end_export
+
+* Chương 1: Giới thiệu
+** Mục 1.1: Nội dung
+
+#+begin_export latex
+\backmatter
+#+end_export
+
+* Tài liệu tham khảo
+* Phụ lục 
+
+#+END_COMMENT

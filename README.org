@@ -1,0 +1,119 @@
+* KAODocument Emacs Package
+
+** For Vietnamese users: Xem hướng dẫn tiếng Việt tại [[file:README.vi.org]]
+
+** Note
+This project is based on the excellent kaobook template by [fmarotta/kaobook](https://github.com/fmarotta/kaobook).
+
+** Motivation
+Writing scientific reports, books, or technical documents in Org-mode is powerful, but producing beautiful, professional-quality PDFs with advanced LaTeX layouts, margin notes, custom boxes, and reusable macros is often tedious and error-prone. Most users have to manually configure LaTeX classes, copy macros, and manage style files for each project.
+
+This package solves those problems by providing:
+- Ready-to-use LaTeX classes and styles for modern, elegant reports and books (kaoreport/kaobook).
+- Automatic macro and template management: no more manual includes or copying files.
+- A rich set of Org-mode macros for margin notes, side notes, custom boxes, and more.
+- Seamless integration with both Doom Emacs and regular Emacs setups.
+
+Ideal for students, researchers, educators, and anyone who wants to focus on content while ensuring their exported documents look professional and consistent.
+
+** Author
+- Ringo Stark <binhthanhgo@gmail.com>
+- GitHub: https://github.com/drringo/kaodocument-emacs
+
+** Features
+- Custom org-latex-classes for 'kaoreport' and 'kaobook'.
+- Ready-to-use LaTeX .sty/.cls files and Org-mode templates.
+- Macros for margin notes, side notes, theorems, and more.
+- **Automatic:** Macros and required LaTeX files are inserted/copied automatically when exporting, no manual include/copy needed.
+
+** Key Features of kaobook/kaoreport
+- Modern page layout with wide margins for notes, figures, tables, and more.
+- Multiple chapter/section heading styles.
+- Margin notes, margin figures/tables, margin TOC, margin listings.
+- Full support for citations, references, glossary, index, and hyperref.
+- Beautiful theorem, definition, warning, and custom box environments.
+- Flexible customization via KOMA-Script options and modular .sty files.
+- Org-mode macro integration for seamless export to LaTeX/PDF.
+
+See the detailed feature guide at: [[file:guides/kaobook-kaoreport-features.org]]
+
+** Installation
+
+*** For Doom Emacs
+1. In your `~/.doom.d/packages.el`:
+   #+begin_src emacs-lisp
+(package! kaodocument-emacs :recipe (:host github :repo "drringo/kaodocument-emacs"))
+#+end_src
+2. In your `~/.doom.d/config.el`:
+   #+begin_src emacs-lisp
+(use-package kaodocument-emacs
+  :config
+  (kaodocument-emacs-setup))
+#+end_src
+
+*** For regular Emacs (vanilla, Spacemacs, etc.)
+1. Clone this repository:
+   #+begin_src shell
+git clone https://github.com/drringo/kaodocument-emacs.git
+#+end_src
+2. Add the directory to your Emacs load-path:
+   #+begin_src emacs-lisp
+(add-to-list 'load-path "/path/to/kaodocument-emacs")
+#+end_src
+3. In your config:
+   #+begin_src emacs-lisp
+(require 'kaodocument-emacs)
+(kaodocument-emacs-setup)
+#+end_src
+
+** Usage
+1. In your Org file, just set:
+   #+begin_src org
+#+LATEX_CLASS: kaoreport
+   #+end_src
+2. Export to PDF as usual (C-c C-e l o). Everything is automatic!
+
+** Using Custom Macros
+- The package provides many Org-mode macros (see `macros/kaoreport-macro.org`).
+- You can use these macros directly in your Org file. Some examples:
+
+  - *newthought*: Highlight a new thought/paragraph
+    #+begin_src org
+    {{{newthought(This is a new idea!)}}}
+    #+end_src
+
+  - *sidenote*: Add a sidenote
+    #+begin_src org
+    This is a statement. {{{sidenote(This is a sidenote!)}}}
+    #+end_src
+
+  - *marginnote*: Add a note in the margin
+    #+begin_src org
+    {{{marginnote(Margin note content)}}}
+    #+end_src
+
+  - *keyword*: Add a keyword in the margin
+    #+begin_src org
+    {{{keyword(Important)}}}
+    #+end_src
+
+  - *sideremind*, *sidedef*, *kwarn*: Boxed reminders, definitions, warnings
+    #+begin_src org
+    {{{sideremind(Reminder title, Reminder content)}}}
+    {{{sidedef(Definition title, Definition content)}}}
+    {{{kwarn(Warning content)}}}
+    #+end_src
+
+- See `macros/kaoreport-macro.org` for more macros and usage.
+
+** Directory Structure
+- templates/: LaTeX .sty/.cls files and Org-mode templates
+- macros/: Org-mode macro definitions
+- assets/: Images, logos, and other resources
+- kaoreport-emacs.el: Emacs Lisp package
+
+** Example
+See 'templates/kaoreport-template.org' for a full Org-mode template.
+
+** License
+See LICENSE or the headers in each file.

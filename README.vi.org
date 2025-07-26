@@ -1,0 +1,118 @@
+* Gói Emacs KAODocument
+
+** Lưu ý
+Dự án này phát triển dựa trên template kaobook của [[https://github.com/fmarotta/kaobook][fmarotta/kaobook]].
+
+** Động lực và nhu cầu sử dụng
+
+Việc viết báo cáo, sách, tài liệu khoa học bằng Org-mode rất mạnh mẽ, nhưng để xuất ra PDF đẹp, chuyên nghiệp với layout hiện đại, chú thích lề, box tùy chỉnh, macro mạnh mẽ... thường rất mất công cấu hình thủ công, dễ lỗi và khó tái sử dụng. Đa số người dùng phải tự copy macro, chỉnh sửa LaTeX class, quản lý file style cho từng dự án.
+
+Gói này giải quyết các vấn đề đó bằng cách:
+- Cung cấp sẵn các class và style LaTeX hiện đại cho báo cáo, sách (kaoreport/kaobook).
+- Tự động quản lý macro và template: không cần include hay copy file thủ công.
+- Bộ macro Org-mode mạnh mẽ cho chú thích lề, box, ghi chú, v.v.
+- Tích hợp mượt mà với cả Doom Emacs lẫn Emacs thường.
+
+Phù hợp cho sinh viên, nghiên cứu viên, giáo viên, kỹ sư... hoặc bất kỳ ai muốn tập trung vào nội dung mà vẫn đảm bảo tài liệu xuất ra luôn đẹp, đồng nhất, chuyên nghiệp.
+
+** Tác giả
+Ringo Stark <binhthanhgo@gmail.com>
+GitHub: https://github.com/drringo/kaodocument-emacs
+
+** Tính năng
+- Thêm các org-latex-classes: 'kaoreport' và 'kaobook' cho Org-mode.
+- Sẵn sàng sử dụng các file LaTeX .sty/.cls và template Org-mode.
+- Macro hỗ trợ chú thích lề, sidenote, môi trường định lý, v.v.
+- **Tự động:** Macro và các file LaTeX cần thiết sẽ được chèn/copy tự động khi export, không cần include hay copy thủ công.
+
+** Tính năng nổi bật của kaobook/kaoreport
+- Layout hiện đại với lề rộng, hỗ trợ chèn chú thích, hình, bảng ở lề.
+- Nhiều kiểu heading chương, section, v.v.
+- Chú thích lề, hình/bảng ở lề, mục lục nhỏ ở lề, code ở lề.
+- Hỗ trợ trích dẫn, tham chiếu, mục lục, chỉ mục, glossary, hyperref.
+- Các môi trường box, định lý, định nghĩa, cảnh báo... đẹp mắt, dễ dùng.
+- Tùy chỉnh linh hoạt, kế thừa toàn bộ tính năng của KOMA-Script.
+- Tích hợp macro Org-mode, tự động hóa khi export sang PDF.
+
+Xem hướng dẫn chi tiết các tính năng tại: [[file:guides/kaobook-kaoreport-features.vi.org]]
+
+** Cài đặt
+
+*** Với Doom Emacs
+1. Trong file ~/.doom.d/packages.el~:
+   #+begin_src emacs-lisp
+   (package! kaodocument-emacs :recipe (:host github :repo "drringo/kaodocument-emacs"))
+   #+end_src
+2. Trong file ~/.doom.d/config.el~:
+   #+begin_src emacs-lisp
+   (use-package kaodocument-emacs
+     :config
+     (kaodocument-emacs-setup))
+   #+end_src
+
+*** Với Emacs thường (hoặc Spacemacs, v.v.)
+1. Clone repository này:
+   #+begin_src shell
+   git clone https://github.com/drringo/kaodocument-emacs.git
+   #+end_src
+2. Thêm thư mục vào load-path của Emacs:
+   #+begin_src emacs-lisp
+   (add-to-list 'load-path "/duong/dan/den/kaodocument-emacs")
+   #+end_src
+3. Trong cấu hình:
+   #+begin_src emacs-lisp
+   (require 'kaodocument-emacs)
+   (kaodocument-emacs-setup)
+   #+end_src
+
+** Sử dụng
+1. Trong file Org, chỉ cần khai báo:
+   #+begin_src org
+   #+LATEX_CLASS: kaoreport
+   #+end_src
+2. Xuất PDF như bình thường (C-c C-e l o). Mọi thứ sẽ tự động!
+
+** Sử dụng macro tùy chỉnh
+- Gói này cung cấp nhiều macro Org-mode (xem file ~macros/kaoreport-macro.org~).
+- Bạn có thể dùng trực tiếp các macro này trong file Org. Ví dụ:
+
+  - *newthought*: Đánh dấu ý mới
+    #+begin_src org
+    {{{newthought(Đây là một ý mới!)}}}
+    #+end_src
+
+  - *sidenote*: Chú thích bên lề
+    #+begin_src org
+    Đây là một câu. {{{sidenote(Đây là chú thích bên lề!)}}}
+    #+end_src
+
+  - *marginnote*: Ghi chú ở lề
+    #+begin_src org
+    {{{marginnote(Nội dung ghi chú lề)}}}
+    #+end_src
+
+  - *keyword*: Từ khóa ở lề
+    #+begin_src org
+    {{{keyword(Quan trọng)}}}
+    #+end_src
+
+  - *sideremind*, *sidedef*, *kwarn*: Box nhắc nhở, định nghĩa, cảnh báo
+    #+begin_src org
+    {{{sideremind(Tiêu đề nhắc nhở, Nội dung nhắc nhở)}}}
+    {{{sidedef(Tiêu đề định nghĩa, Nội dung định nghĩa)}}}
+    {{{kwarn(Nội dung cảnh báo)}}}
+    #+end_src
+
+- Xem thêm trong file ~macros/kaoreport-macro.org~ để biết thêm macro và ví dụ.
+
+** Cấu trúc thư mục
+- templates/: Các file LaTeX .sty/.cls và template Org-mode
+- macros/: Macro Org-mode
+- assets/: Ảnh, logo, tài nguyên bổ sung
+- kaodocument-emacs.el: Gói Emacs Lisp
+
+** Ví dụ
+Xem file ~templates/kaoreport-template.org~ để tham khảo template Org-mode mẫu.
+
+** Giấy phép
+Xem LICENSE hoặc phần đầu mỗi file. 

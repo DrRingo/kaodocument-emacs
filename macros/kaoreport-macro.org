@@ -1,0 +1,24 @@
+# -*- mode: org; -*-
+
+#+MACRO: newthought @@latex:{\rmfamily\scshape $1}@@@@html:NEWTHOUGHT: [$1]@@
+
+#+MACRO: sidenote @@latex:\sidenote[$2][$3]{$1}@@@@html:SIDENOTE: [$1]@@
+
+#+MACRO: marginnote @@latex:\marginnote[$2]{$1}@@@@html:MARGINNOTE: [$1]@@
+
+#+MACRO: keyword @@latex:\marginnote[$2]{Từ khoá: \emph{$1}}@@@@html:KEYWORD: [$1]@@
+
+# ---------------------------
+# Một số môi trường tùy chỉnh thêm, cho tài liệu thêm sinh động
+
+# Reminder box
+#+LATEX_HEADER: \newcommand{\reminder}[3][0pt]{\marginnote[#1]{\begin{kaobox}[title=Lưu ý: #2, colback=YellowGreen!25!White,colbacktitle=YellowGreen!25!White]#3\end{kaobox}}}
+#+MACRO: sideremind @@latex:\reminder[$3]{$1}{$2}@@@@html:SIDEREMINDER: [1] - [$2]@@
+
+# Definition box
+#+LATEX_HEADER: \newcommand{\sidedef}[3][0pt]{\marginnote[#1]{\begin{kaobox}[title=Định nghĩa: #2,colback=GreenYellow!25!White,colbacktitle=GreenYellow!25!White]#3\end{kaobox}}}
+#+MACRO: sidedef @@latex:\sidedef[$3]{$1}{$2}@@@@html: SIDEDEFINITION: [$1] - [$2]@@
+
+# Warning box
+#+LATEX_HEADER: \newcommand{\warn}[1]{\begin{kaobox}[colback=OrangeRed!25!White]#1\end{kaobox}}
+#+MACRO: kwarn @@latex:\warn{$1}@@@@html: WARNING: [$1]@@

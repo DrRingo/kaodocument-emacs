@@ -1,0 +1,171 @@
+* Hướng dẫn chi tiết các tính năng của KAODocument (kaobook/kaoreport)
+
+Tài liệu này giải thích chi tiết và cho ví dụ về từng tính năng nổi bật của hệ thống KAODocument (kaobook và kaoreport). Mỗi tính năng đều có phần mô tả, ví dụ sử dụng với Org-mode và LaTeX, cùng các lưu ý nâng cao và tình huống thực tế.
+
+** 1. Layout hiện đại với lề rộng
+- Mô tả: Văn bản chính được thu hẹp chiều rộng, dành lề rộng để chèn chú thích, hình, bảng... giúp dễ đọc và trình bày sinh động.
+- Org-mode: Không cần cú pháp đặc biệt, chỉ cần dùng các macro margin bên dưới.
+- LaTeX: Được xử lý tự động bởi class.
+- Ví dụ (Org):
+  #+begin_src org
+  Đây là nội dung chính. {{{sidenote(Xem chú thích quan trọng ở lề!)}}}
+  #+end_src
+- Ví dụ (LaTeX):
+  Nội dung chính \sidenote{Xem chú thích quan trọng ở lề!}
+- Lưu ý: Dùng margin notes cho định nghĩa, nhắc nhở, hoặc tham chiếu hình/bảng. Kết hợp với margin figure để tài liệu sinh động.
+- Nâng cao: Có thể chỉnh chiều rộng lề/text bằng class options hoặc sửa kao.sty.
+
+** 2. Nhiều kiểu heading chương/mục
+- Mô tả: Có thể chọn nhiều kiểu tiêu đề chương, mục cho tài liệu chuyên nghiệp.
+- Org-mode: Dùng heading chuẩn (*, **, ...).
+- LaTeX: Dùng \chapter, \section, ... Style do class quyết định.
+- Ví dụ (Org):
+  #+begin_src org
+  * Chương 1: Giới thiệu
+  ** Mục 1.1: Bối cảnh
+  #+end_src
+- Ví dụ (LaTeX):
+  \chapter{Giới thiệu}
+  \section{Bối cảnh}
+- Lưu ý: Có thể đổi style heading bằng \setchapterstyle hoặc sửa file .cls.
+- Nâng cao: Kết hợp với ảnh chương, màu tiêu đề để tạo thương hiệu.
+
+** 3. Chú thích lề (sidenote, marginnote)
+- Mô tả: Thêm chú thích ở lề, có hoặc không đánh số.
+- Org-mode:
+  #+begin_src org
+  {{{sidenote(Đây là chú thích có số!)}}}
+  {{{marginnote(Đây là chú thích không số!)}}}
+  {{{sidenote[*,2cm](Dấu tuỳ chỉnh, có offset!)}}}
+  #+end_src
+- LaTeX:
+  \sidenote{Đây là chú thích có số!}
+  \marginnote{Đây là chú thích không số!}
+  \sidenote[*][2cm]{Dấu tuỳ chỉnh, có offset!}
+- Lưu ý: Dùng 'offset' để chỉnh vị trí dọc, 'mark' để thay ký hiệu.
+- Nâng cao: Có thể kết hợp với trích dẫn, ví dụ {{{sidenote(Xem \sidecite{doe2020})}}}.
+
+** 4. Hình và bảng ở lề
+- Mô tả: Đặt hình/bảng ở lề để nhấn mạnh hoặc tiết kiệm không gian.
+- Org-mode:
+  #+begin_src org
+  #+ATTR_LATEX: :float mfig :width 3cm
+  [[file:myimage.png]]
+  #+CAPTION: Hình ở lề
+  #+end_src
+- LaTeX:
+  \begin{marginfigure}
+    \includegraphics[width=3cm]{myimage.png}
+    \caption{Hình ở lề}
+  \end{marginfigure}
+- Lưu ý: Dùng :float mtable cho bảng ở lề. Hình nhỏ, icon, sơ đồ rất phù hợp.
+- Nâng cao: Kết hợp với margin note để chú thích trực tiếp hình ở lề.
+
+** 5. Mục lục nhỏ và code ở lề
+- Mô tả: Thêm mục lục mini hoặc đoạn code ở lề.
+- Org-mode:
+  #+begin_src org
+  #+LATEX: \margintoc
+  #+LATEX: \begin{marginlisting}
+  #+LATEX: \begin{verbatim}
+  print("Xin chào, margin!")
+  #+LATEX: \end{verbatim}
+  #+LATEX: \end{marginlisting}
+  #+end_src
+- LaTeX:
+  \margintoc
+  \begin{marginlisting}
+  print("Xin chào, margin!")
+  \end{marginlisting}
+- Lưu ý: Dùng cho code ngắn, công thức, hoặc mục lục nhỏ cho chương dài.
+- Nâng cao: Tuỳ chỉnh màu, khung cho marginlisting trong kao.sty.
+
+** 6. Hình/bảng tràn toàn trang
+- Mô tả: Hình/bảng chiếm toàn bộ chiều rộng trang.
+- Org-mode:
+  #+begin_src org
+  #+ATTR_LATEX: :float fullfig :width \textwidth
+  [[file:wideimage.png]]
+  #+CAPTION: Hình rộng
+  #+end_src
+- LaTeX:
+  \begin{figure*}
+    \includegraphics[width=\textwidth]{wideimage.png}
+    \caption{Hình rộng}
+  \end{figure*}
+- Lưu ý: Dùng cho sơ đồ lớn, bảng dữ liệu, ảnh panorama.
+- Nâng cao: Kết hợp với \clearpage hoặc \afterpage để kiểm soát vị trí.
+
+** 7. Trích dẫn, tham chiếu, glossary, index, hyperref
+- Mô tả: Hỗ trợ trích dẫn ở lề, tham chiếu, mục lục, chỉ mục, glossary, liên kết.
+- Org-mode:
+  #+begin_src org
+  cite:doe2020
+  #+end_src
+- LaTeX:
+  \sidecite{doe2020}
+- Ví dụ (Org):
+  #+begin_src org
+  #+LATEX: \printglossary
+  #+LATEX: \printindex
+  #+end_src
+- Lưu ý: Dùng \sidecite cho trích dẫn lề, \cref cho tham chiếu chéo, các lệnh glossary/index như LaTeX thông thường.
+- Nâng cao: Tuỳ chỉnh style trích dẫn trong kaobiblio.sty, hoặc dùng link màu với hyperref.
+
+** 8. Định lý, định nghĩa, cảnh báo, box tùy chỉnh
+- Mô tả: Các môi trường định lý, định nghĩa, cảnh báo, box... đẹp mắt, có thể có màu.
+- Org-mode:
+  #+begin_src org
+  #+BEGIN_theorem
+  Đây là một định lý về chú thích lề.
+  #+END_theorem
+  #+BEGIN_definition
+  Chú thích lề là ghi chú ở lề trang.
+  #+END_definition
+  #+BEGIN_kaobox
+  Đây là một box màu tuỳ chỉnh.
+  #+END_kaobox
+  #+end_src
+- LaTeX:
+  \begin{theorem} ... \end{theorem}
+  \begin{definition} ... \end{definition}
+  \begin{kaobox}[colback=yellow!10] ... \end{kaobox}
+- Lưu ý: Dùng kaobox cho chú thích, tips, highlight. Định lý có thể đánh số theo chương/mục.
+- Nâng cao: Tuỳ chỉnh màu, tiêu đề, khung box trong kao.sty hoặc tcolorbox.
+
+** 9. Tùy chỉnh linh hoạt với KOMA-Script
+- Mô tả: Kế thừa toàn bộ tùy chọn của KOMA-Script (scrbook) về khổ giấy, font, heading...
+- Org-mode: Đặt tùy chọn trong header hoặc class options, ví dụ:
+  #+begin_src org
+  #+LATEX_CLASS_OPTIONS: [a4paper,12pt,twoside=true]
+  #+end_src
+- LaTeX: Truyền option cho \documentclass, ví dụ:
+  \documentclass[fontsize=11pt,twoside=true]{kaobook}
+- Lưu ý: Dùng KOMA-Script để kiểm soát layout, font, section nâng cao.
+- Nâng cao: Kết hợp với .sty riêng cho branding hoặc yêu cầu đặc biệt.
+
+** 10. Macro Org-mode mạnh mẽ
+- Mô tả: Dùng macro Org-mode cho mọi nội dung lề, box, v.v. Xem macros/kaoreport-macro.org để biết đầy đủ.
+- Ví dụ:
+  #+begin_src org
+  {{{sideremind(Tiêu đề nhắc nhở, Nội dung nhắc nhở)}}}
+  {{{sidedef(Tiêu đề định nghĩa, Nội dung định nghĩa)}}}
+  {{{kwarn(Nội dung cảnh báo)}}}
+  #+end_src
+- Lưu ý: Kết hợp macro để tạo tài liệu động, có thể lồng macro vào heading, caption, hoặc trong box.
+- Nâng cao: Định nghĩa macro riêng trong macros/kaoreport-macro.org cho dự án, hoặc override macro mặc định.
+
+** 11. Ví dụ thực tế: Kết hợp nhiều tính năng
+- Ví dụ (Org):
+  #+begin_src org
+  * Chương 2: Sử dụng nâng cao
+  Chương này minh hoạ chú thích lề, hình ở lề, và box tuỳ chỉnh.
+  {{{sidenote(Xem Hình~\ref{fig:margin})}}}
+  #+ATTR_LATEX: :float mfig :width 2.5cm
+  [[file:margin_diagram.png]]
+  #+CAPTION: Sơ đồ ở lề
+  #+BEGIN_kaobox
+  Lưu ý: Chú thích lề rất phù hợp cho giải thích bên ngoài luồng chính!
+  #+END_kaobox
+  #+end_src
+- Nâng cao: Kết hợp tất cả tính năng để tạo tài liệu kỹ thuật, giáo trình, sách chuyên sâu đẹp mắt, dễ đọc. 

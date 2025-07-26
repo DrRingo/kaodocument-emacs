@@ -1,0 +1,171 @@
+* Detailed Features of KAODocument (kaobook/kaoreport)
+
+This guide provides detailed explanations and examples for each major feature of the KAODocument system (kaobook and kaoreport). For each feature, you will find a description, Org-mode usage, LaTeX usage, advanced tips, and real-world scenarios.
+
+** 1. Modern Page Layout with Wide Margins
+- Description: The main text is set with reduced width, leaving wide margins for notes, figures, tables, and more. This improves readability and allows for rich margin content.
+- Org-mode: No special syntax needed; just use the macros for margin content below.
+- LaTeX: Handled automatically by the class.
+- Example (Org):
+  #+begin_src org
+  This is the main text. {{{sidenote(See this important note in the margin!)}}}
+  #+end_src
+- Example (LaTeX):
+  Main text \sidenote{See this important note in the margin!}
+- Tips: Use margin notes for definitions, reminders, or references to figures/tables. Combine with margin figures for visually rich documents.
+- Advanced: You can adjust the margin width and text width by editing the class options or kao.sty.
+
+** 2. Multiple Chapter/Section Heading Styles
+- Description: Choose from several chapter and section heading styles for a professional look.
+- Org-mode: Use standard Org headings (*, **, etc.).
+- LaTeX: Use \chapter, \section, etc. The style is set by the class.
+- Example (Org):
+  #+begin_src org
+  * Chapter 1: Introduction
+  ** Section 1.1: Background
+  #+end_src
+- Example (LaTeX):
+  \chapter{Introduction}
+  \section{Background}
+- Tips: You can switch heading styles by editing the .cls file or using \setchapterstyle in LaTeX.
+- Advanced: Combine with custom chapter images or colored headings for branding.
+
+** 3. Margin Notes (sidenote, marginnote)
+- Description: Add notes in the margin, with or without numbering.
+- Org-mode:
+  #+begin_src org
+  {{{sidenote(This is a numbered side note!)}}}
+  {{{marginnote(This is an unnumbered margin note!)}}}
+  {{{sidenote[*,2cm](Custom mark, with offset!)}}}
+  #+end_src
+- LaTeX:
+  \sidenote{This is a numbered side note!}
+  \marginnote{This is an unnumbered margin note!}
+  \sidenote[*][2cm]{Custom mark, with offset!}
+- Tips: Use the 'offset' option to adjust vertical placement, or 'mark' for custom symbols.
+- Advanced: Margin notes can be combined with citations, e.g. {{{sidenote(See \sidecite{doe2020})}}}.
+
+** 4. Margin Figures and Tables
+- Description: Place figures and tables in the margin for emphasis or to save space.
+- Org-mode:
+  #+begin_src org
+  #+ATTR_LATEX: :float mfig :width 3cm
+  [[file:myimage.png]]
+  #+CAPTION: A margin figure
+  #+end_src
+- LaTeX:
+  \begin{marginfigure}
+    \includegraphics[width=3cm]{myimage.png}
+    \caption{A margin figure}
+  \end{marginfigure}
+- Tips: Use :float mtable for margin tables. Margin figures are great for small diagrams, icons, or side illustrations.
+- Advanced: Combine with margin notes to reference the figure directly in the margin.
+
+** 5. Margin TOC and Listings
+- Description: Add a mini table of contents or code listing in the margin.
+- Org-mode:
+  #+begin_src org
+  #+LATEX: \margintoc
+  #+LATEX: \begin{marginlisting}
+  #+LATEX: \begin{verbatim}
+  print("Hello, margin!")
+  #+LATEX: \end{verbatim}
+  #+LATEX: \end{marginlisting}
+  #+end_src
+- LaTeX:
+  \margintoc
+  \begin{marginlisting}
+  print("Hello, margin!")
+  \end{marginlisting}
+- Tips: Use for quick code snippets, formulas, or local TOC for long chapters.
+- Advanced: You can style margin listings with custom colors or frames in kao.sty.
+
+** 6. Wide Figures and Tables
+- Description: Figures and tables that span the full width of the page.
+- Org-mode:
+  #+begin_src org
+  #+ATTR_LATEX: :float fullfig :width \textwidth
+  [[file:wideimage.png]]
+  #+CAPTION: A wide figure
+  #+end_src
+- LaTeX:
+  \begin{figure*}
+    \includegraphics[width=\textwidth]{wideimage.png}
+    \caption{A wide figure}
+  \end{figure*}
+- Tips: Use for large diagrams, data tables, or images that need more space.
+- Advanced: Combine with \clearpage or \afterpage for precise placement.
+
+** 7. Citations, References, Glossary, Index, Hyperref
+- Description: Full support for citations in the margin, references, glossary, index, and hyperlinks.
+- Org-mode:
+  #+begin_src org
+  cite:doe2020
+  #+end_src
+- LaTeX:
+  \sidecite{doe2020}
+- Example (Org):
+  #+begin_src org
+  #+LATEX: \printglossary
+  #+LATEX: \printindex
+  #+end_src
+- Tips: Use \sidecite for margin citations, \cref for cross-references, and glossary/index commands as usual.
+- Advanced: Customize citation style in kaobiblio.sty, or use colored links with hyperref options.
+
+** 8. Theorem, Definition, Warning, and Custom Box Environments
+- Description: Beautiful environments for theorems, definitions, warnings, and custom notes, with optional colored boxes.
+- Org-mode:
+  #+begin_src org
+  #+BEGIN_theorem
+  This is a theorem about margin notes.
+  #+END_theorem
+  #+BEGIN_definition
+  A margin note is a note in the margin.
+  #+END_definition
+  #+BEGIN_kaobox
+  This is a custom colored box.
+  #+END_kaobox
+  #+end_src
+- LaTeX:
+  \begin{theorem} ... \end{theorem}
+  \begin{definition} ... \end{definition}
+  \begin{kaobox}[colback=yellow!10] ... \end{kaobox}
+- Tips: Use kaobox for remarks, tips, or colored highlights. Theorem environments can be numbered by section or chapter.
+- Advanced: Customize box color, title, and frame in kao.sty or with tcolorbox options.
+
+** 9. Flexible Customization via KOMA-Script
+- Description: Inherit all KOMA-Script (scrbook) options for paper size, font, headings, etc.
+- Org-mode: Set options in the LaTeX header or class options, e.g.:
+  #+begin_src org
+  #+LATEX_CLASS_OPTIONS: [a4paper,12pt,twoside=true]
+  #+end_src
+- LaTeX: Pass options to \documentclass, e.g.:
+  \documentclass[fontsize=11pt,twoside=true]{kaobook}
+- Tips: Use KOMA-Script for advanced page layout, font, and sectioning control.
+- Advanced: Combine with custom .sty files for institutional branding or special requirements.
+
+** 10. Org-mode Macro Integration
+- Description: Use powerful Org-mode macros for all margin content, boxes, and more. See macros/kaoreport-macro.org for the full list.
+- Example:
+  #+begin_src org
+  {{{sideremind(Reminder title, Reminder content)}}}
+  {{{sidedef(Definition title, Definition content)}}}
+  {{{kwarn(Warning content)}}}
+  #+end_src
+- Tips: Combine macros for rich, dynamic documents. You can nest macros, or use them in headings, captions, or even inside box environments.
+- Advanced: Define your own macros in macros/kaoreport-macro.org for custom needs, or override existing ones for project-specific styling.
+
+** 11. Real-world Example: Combining Features
+- Example (Org):
+  #+begin_src org
+  * Chapter 2: Advanced Usage
+  This chapter demonstrates margin notes, margin figures, and custom boxes.
+  {{{sidenote(See Figure~\ref{fig:margin})}}}
+  #+ATTR_LATEX: :float mfig :width 2.5cm
+  [[file:margin_diagram.png]]
+  #+CAPTION: Margin diagram
+  #+BEGIN_kaobox
+  Remember: Margin notes are great for side explanations!
+  #+END_kaobox
+  #+end_src
+- Advanced: Use all features together for a visually rich, highly readable technical document. 
