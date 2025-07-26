@@ -1,7 +1,3 @@
-#+LaTeX_CLASS: kaoreport
-# +LATEX_CLASS_OPTIONS: [a4paper,twoside,12pt]
-#+LATEX_CLASS_OPTIONS: [a4paper,12pt]
-
 # ---------------------------
 # Các package đặc trưng của kaoreport
 #+LATEX_HEADER: \usepackage{templates/kao}

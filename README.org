@@ -73,6 +73,25 @@ git clone https://github.com/drringo/kaodocument-emacs.git
    #+end_src
 2. Export to PDF as usual (C-c C-e l o). Everything is automatic!
 
+** Troubleshooting
+
+If you encounter "No such file or directory" errors for templates, try:
+
+1. **Check if the package is properly installed:**
+   #+begin_src emacs-lisp
+   (message "Template dir: %s" kaodocument-emacs-template-dir)
+   (message "Template dir exists: %s" (file-exists-p kaodocument-emacs-template-dir))
+   #+end_src
+
+2. **Manually copy templates to your Org file directory:**
+   - Copy the ~templates/~ folder from the package to your Org file directory
+   - Or copy individual .sty/.cls files as needed
+
+3. **Alternative: Use absolute paths in your Org file:**
+   #+begin_src org
+   #+LATEX_HEADER: \usepackage{/path/to/kaodocument-emacs/templates/kao}
+   #+end_src
+
 ** Using Custom Macros
 - The package provides many Org-mode macros (see `macros/kaoreport-macro.org`).
 - You can use these macros directly in your Org file. Some examples:

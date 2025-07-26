@@ -72,6 +72,25 @@ Xem hướng dẫn chi tiết các tính năng tại: [[file:guides/kaobook-kaor
    #+end_src
 2. Xuất PDF như bình thường (C-c C-e l o). Mọi thứ sẽ tự động!
 
+** Khắc phục sự cố
+
+Nếu gặp lỗi "No such file or directory" cho templates, thử:
+
+1. **Kiểm tra package đã cài đặt đúng chưa:**
+   #+begin_src emacs-lisp
+   (message "Template dir: %s" kaodocument-emacs-template-dir)
+   (message "Template dir exists: %s" (file-exists-p kaodocument-emacs-template-dir))
+   #+end_src
+
+2. **Copy thủ công templates vào thư mục file Org:**
+   - Copy thư mục ~templates/~ từ package vào thư mục chứa file Org
+   - Hoặc copy từng file .sty/.cls riêng lẻ nếu cần
+
+3. **Cách khác: Dùng đường dẫn tuyệt đối trong file Org:**
+   #+begin_src org
+   #+LATEX_HEADER: \usepackage{/duong/dan/den/kaodocument-emacs/templates/kao}
+   #+end_src
+
 ** Sử dụng macro tùy chỉnh
 - Gói này cung cấp nhiều macro Org-mode (xem file ~macros/kaoreport-macro.org~).
 - Bạn có thể dùng trực tiếp các macro này trong file Org. Ví dụ:

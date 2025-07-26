@@ -1,6 +1,3 @@
-#+LaTeX_CLASS: kaobook
-#+LATEX_CLASS_OPTIONS: [a4paper,12pt]
-
 # ---------------------------
 # Các package đặc trưng của kaobook
 #+LATEX_HEADER: \usepackage{templates/kao}
