@@ -57,7 +57,7 @@
     (message "Created KAODocument template directory: %s" kaodocument-emacs-template-dir))
   (add-to-list 'org-latex-classes
                '("kaoreport"
-                 "\\documentclass[12pt,a4paper]{kaohandt}"
+                 "\\documentclass[12pt,a4paper]{templates/kaohandt}"
                  ("\\section{%s}" . "\\section*{%s}")
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -65,7 +65,7 @@
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
   (add-to-list 'org-latex-classes
                '("kaobook"
-                 "\\documentclass[12pt,a4paper]{kaobook}"
+                 "\\documentclass[12pt,a4paper]{templates/kaobook}"
                  ("\\part{%s}" . "\\part*{%s}")
                  ("\\chapter{%s}" . "\\chapter*{%s}")
                  ("\\section{%s}" . "\\section*{%s}")
@@ -105,7 +105,8 @@
           (let ((dest (expand-file-name (file-name-nondirectory f) templates-dir)))
             (unless (file-exists-p dest)
               (copy-file f dest t)
-              (message "KAODocument: Copied %s to templates directory" (file-name-nondirectory f)))))))))
+              (message "KAODocument: Copied %s to templates directory" (file-name-nondirectory f))))))
+)))
 
 (defun kaodocument-emacs--auto-insert-org-template (_backend)
   "Automatically insert appropriate Org template based on LaTeX class."
