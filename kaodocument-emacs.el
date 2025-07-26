@@ -25,9 +25,18 @@
   :group 'org)
 
 (defconst kaodocument-emacs--repo-dir
-  (if (featurep 'straight)
-      (straight--repos-dir "kaodocument-emacs")
-    (file-name-directory (or load-file-name buffer-file-name))))
+  (let ((default-dir (file-name-directory (or load-file-name buffer-file-name))))
+    (cond
+     ;; Ưu tiên lấy từ straight nếu có
+     ((and (featurep 'straight)
+           (fboundp 'straight--repos-dir)
+           (file-directory-p (straight--repos-dir "kaodocument-emacs")))
+      (straight--repos-dir "kaodocument-emacs"))
+     ;; Nếu không thì thử đường dẫn mặc định theo vị trí đã biết
+     ((file-directory-p "~/.config/emacs/.local/straight/repos/kaodocument-emacs/")
+      "~/.config/emacs/.local/straight/repos/kaodocument-emacs/")
+     ;; Cuối cùng fallback về nơi đang load
+     (t default-dir))))
 
 (defcustom kaodocument-emacs-template-dir
   (expand-file-name "templates" kaodocument-emacs--repo-dir)
@@ -41,14 +50,11 @@
 (defun kaodocument-emacs-setup ()
   "Register KAODocument LaTeX classes (KAOReport and KAOBook) for Org-mode and enable auto-macros."
   (interactive)
-  ;; Debug: Print template directory path
   (message "KAODocument template directory: %s" kaodocument-emacs-template-dir)
   (message "KAODocument template directory exists: %s" (file-exists-p kaodocument-emacs-template-dir))
-  ;; Create templates directory if it doesn't exist
   (unless (file-exists-p kaodocument-emacs-template-dir)
     (make-directory kaodocument-emacs-template-dir t)
     (message "Created KAODocument template directory: %s" kaodocument-emacs-template-dir))
-  ;; KAOReport
   (add-to-list 'org-latex-classes
                '("kaoreport"
                  "\\documentclass[12pt,a4paper]{kaohandt}"
@@ -57,7 +63,6 @@
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")
                  ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
-  ;; KAOBook
   (add-to-list 'org-latex-classes
                '("kaobook"
                  "\\documentclass[12pt,a4paper]{kaobook}"
@@ -67,7 +72,6 @@
                  ("\\subsection{%s}" . "\\subsection*{%s}")
                  ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
                  ("\\paragraph{%s}" . "\\paragraph*{%s}")))
-  ;; Enable auto macro/header insertion and template copying
   (add-hook 'org-export-before-processing-hook #'kaodocument-emacs--auto-insert-macros)
   (add-hook 'org-export-before-processing-hook #'kaodocument-emacs--auto-copy-templates)
   (add-hook 'org-export-before-processing-hook #'kaodocument-emacs--auto-insert-org-template))
@@ -128,4 +132,3 @@
 
 (provide 'kaodocument-emacs)
 ;;; kaodocument-emacs.el ends here
-
