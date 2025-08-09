@@ -89,24 +89,30 @@
           (insert-file-contents-literally kaodocument-emacs-macro-file)
           (insert "\n"))))))
 
-(defun kaodocument-emacs--auto-copy-templates (_backend)
-  "Copy required .sty/.cls files to the templates subdirectory of the Org file directory if not present."
-  (let* ((orgfile (or (buffer-file-name) default-directory))
-         (target-dir (file-name-directory orgfile))
-         (templates-dir (expand-file-name "templates" target-dir)))
-    (when (and kaodocument-emacs-template-dir (file-exists-p kaodocument-emacs-template-dir))
-      ;; Create templates directory if it doesn't exist
-      (unless (file-exists-p templates-dir)
-        (make-directory templates-dir t)
-        (message "KAODocument: Created templates directory: %s" templates-dir))
-      ;; Copy .sty and .cls files to templates subdirectory
-      (let ((files (directory-files kaodocument-emacs-template-dir t "\\.\\(sty\\|cls\\)$")))
-        (dolist (f files)
-          (let ((dest (expand-file-name (file-name-nondirectory f) templates-dir)))
-            (unless (file-exists-p dest)
-              (copy-file f dest t)
-              (message "KAODocument: Copied %s to templates directory" (file-name-nondirectory f))))))
-)))
+(defun kaodocument-emacs--auto-copy-templates (backend)
+  "Copy required .sty/.cls files when exporting with KAODocument."
+  (when (and (eq backend 'latex)
+             (derived-mode-p 'org-mode))
+    (let* ((latex-class-keywords (org-collect-keywords '("LATEX_CLASS")))
+           (latex-class (when latex-class-keywords
+                          (car (cdr (car latex-class-keywords))))))
+      (when (and (member latex-class '("kaoreport" "kaobook"))
+                 kaodocument-emacs-template-dir
+                 (file-exists-p kaodocument-emacs-template-dir))
+        (let* ((orgfile (or (buffer-file-name) default-directory))
+               (target-dir (file-name-directory orgfile))
+               (templates-dir (expand-file-name "templates" target-dir)))
+          ;; Create templates directory if it doesn't exist
+          (unless (file-exists-p templates-dir)
+            (make-directory templates-dir t)
+            (message "KAODocument: Created templates directory: %s" templates-dir))
+          ;; Copy .sty and .cls files to templates subdirectory
+          (let ((files (directory-files kaodocument-emacs-template-dir t "\\.\\(sty\\|cls\\)$")))
+            (dolist (f files)
+              (let ((dest (expand-file-name (file-name-nondirectory f) templates-dir)))
+                (unless (file-exists-p dest)
+                  (copy-file f dest t)
+                  (message "KAODocument: Copied %s to templates directory" (file-name-nondirectory f))))))))))
 
 (defun kaodocument-emacs--auto-insert-org-template (_backend)
   "Automatically insert appropriate Org template based on LaTeX class."
